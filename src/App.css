@@ -1,0 +1,39 @@
+/* @import "tailwindcss"; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+  margin: 0 auto;
+  text-align: center;
+}
+body {
+  background-color: #4c93af;
+}
+
+/* Стиль для кнопки удаления */
+button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #d32f2f;
+}
+
+/* Стиль для иконки */
+svg {
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+/* Модификация для текста задачи */
+span {
+  font-size: 16px;
+  font-weight: bold;
+  flex-grow: 1;
+}

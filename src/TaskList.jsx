@@ -10,7 +10,7 @@ const TaskList = ({
   isValue,
   setIsValue,
 }) => {
-  console.log("Tasks in TaskList:", tasks);
+  // console.log("Tasks in TaskList:", tasks);
   return (
     <>
       <div className="flex items-center justify-between mb-2.5 p-2.5 rounded-sm">

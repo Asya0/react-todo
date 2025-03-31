@@ -3,13 +3,13 @@ import TaskList from "./TaskList";
 import "./App.css";
 
 const App = () => {
+  const [isValue, setIsValue] = useState("");
   const [taskList, setTaskList] = useState(() => {
     const savedTasks = localStorage.getItem("tasks");
     const parsedTasks = savedTasks ? JSON.parse(savedTasks) : [];
     console.log("Loaded tasks from localStorage:", parsedTasks);
     return parsedTasks;
   });
-  const [isValue, setIsValue] = useState("");
 
   const [tasks, setTasks] = useState([
     { id: 1, title: " work ", isCompleted: true },
@@ -42,19 +42,20 @@ const App = () => {
     setTaskList((prevTasks) => prevTasks.filter((t) => t.id !== id));
   };
 
-  const addTask = (title) => {
-    setTaskList((prevTasks) => {
-      if (isValue === "" || isValue.trim() === "") {
-        alert("введите название задачи");
-        setIsValue("");
-        return;
-      }
-      const newTask = { id: prevTasks.length + 1, title, isCompleted: false };
-      return [...prevTasks, newTask];
-    });
-  };
-  const handleAddTask = () => {
-    if (isValue == "" || isValue.trim() === "") {
+  // const addTask = (title) => {
+  //   setTaskList((prevTasks) => {
+  //     if (isValue === "" || isValue.trim() === "") {
+  //       alert("введите название задачи");
+  //       setIsValue("");
+  //       // return;
+  //     }
+  //     const newTask = { id: prevTasks.length + 1, title, isCompleted: false };
+  //     setIsValue("");
+  //     return [...prevTasks, newTask];
+  //   });
+  // };
+  const addTask = () => {
+    if (isValue.trim() === "") {
       alert("введите название задачи");
       setIsValue("");
       return;
@@ -82,7 +83,6 @@ const App = () => {
             onCheck={checkTask}
             onRemove={removeTask}
             onAdd={addTask}
-            handleAddTask={handleAddTask}
             isValue={isValue}
             setIsValue={setIsValue}
           />

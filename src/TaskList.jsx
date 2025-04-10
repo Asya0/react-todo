@@ -28,8 +28,8 @@ const TaskList = ({
           key={task.id}
           id={task.id}
           {...task}
-          // title={task.title}
-          // isCompleted={task.isCompleted}
+          title={task.title}
+          isCompleted={task.isCompleted}
           onCheck={onCheck}
           onRemove={onRemove}
           onEdit={onEdit}

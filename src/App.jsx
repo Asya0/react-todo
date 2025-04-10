@@ -1,6 +1,7 @@
 import { useState, useEffect, React } from "react";
 import TaskList from "./TaskList";
 import "./App.css";
+import "./index.css";
 
 const App = () => {
   const [isValue, setIsValue] = useState("");
@@ -11,13 +12,13 @@ const App = () => {
     return parsedTasks;
   });
 
-  const [tasks, setTasks] = useState([
-    { id: 1, title: " work ", isCompleted: true },
-    { id: 2, title: " покурить ", isCompleted: false },
-    { id: 3, title: " что-то типа обэда ", isCompleted: true },
-    { id: 4, title: " чтение ", isCompleted: false },
-    { id: 5, title: " учеба ", isCompleted: false },
-  ]);
+  // const [tasks, setTasks] = useState([
+  //   { id: 1, title: " work ", isCompleted: true },
+  //   { id: 2, title: " покурить ", isCompleted: false },
+  //   { id: 3, title: " что-то типа обэда ", isCompleted: true },
+  //   { id: 4, title: " чтение ", isCompleted: false },
+  //   { id: 5, title: " учеба ", isCompleted: false },
+  // ]);
 
   // Сохранение задач в localStorage при изменении taskList
   useEffect(() => {
@@ -26,12 +27,13 @@ const App = () => {
     // сохраняет, но не отображает на экране все задачи
   }, [taskList]);
 
-  useEffect(() => {
-    console.log("обновление setTasks");
-  }, [setTasks]);
+  // useEffect(() => {
+  //   console.log("обновление setTasks");
+  // }, [setTasks]);
 
   //TODO находить нужную задачу и менять ее isChecked, по id
   const checkTask = (id) => {
+    console.log("вызов checkTask");
     setTaskList((prevTasks) =>
       prevTasks.map((t) =>
         t.id === id ? { ...t, isCompleted: !t.isCompleted } : t
@@ -61,7 +63,7 @@ const App = () => {
       return;
     }
     const newTask = {
-      id: tasks.length + 1,
+      id: taskList.length + 1,
       title: isValue,
       isCompleted: false,
     };
@@ -71,6 +73,10 @@ const App = () => {
 
   return (
     <>
+      <h1 className="text-4xl text-fuchsia-600 font-bold">
+        Tailwind работает 🌈
+      </h1>
+
       <div className="max-w-7xl w-full flex flex-col">
         <div className="flex items-center justify-center">
           <h1 className="text-3xl font-bold underline hover:text-sky-300">

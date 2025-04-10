@@ -14,7 +14,13 @@ const Task = ({ id, title, isCompleted, onRemove, onCheck }) => {
             onCheck(id);
           }}
         />
-        <span className="flex-grow">{title}</span>
+        <span
+          style={{ textDecoration: isCompleted ? "line-through " : "" }}
+          className={`flex-grow ${isCompleted ? "text-blue-600" : ""}`}
+        >
+          {title}
+        </span>
+
         {/* <button
           onClick={() => onEdit(id, prompt("Редактировать задачу", title))}
         >

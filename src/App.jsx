@@ -6,10 +6,15 @@ import "./index.css";
 const App = () => {
   const [isValue, setIsValue] = useState("");
   const [taskList, setTaskList] = useState(() => {
-    const savedTasks = localStorage.getItem("tasks");
-    const parsedTasks = savedTasks ? JSON.parse(savedTasks) : [];
-    console.log("Loaded tasks from localStorage:", parsedTasks);
-    return parsedTasks;
+    try {
+      const savedTasks = localStorage.getItem("tasks");
+      const parsedTasks = savedTasks ? JSON.parse(savedTasks) : [];
+      console.log("Loaded tasks from localStorage:", parsedTasks);
+      return parsedTasks;
+    } catch (e) {
+      console.log("Ошибка при чтении из localStorage: ", e);
+      return [];
+    }
   });
 
   // const [tasks, setTasks] = useState([
@@ -71,11 +76,17 @@ const App = () => {
     setIsValue("");
   };
 
+  const onEdit = (id, newTitle) => {
+    setTaskList((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, title: newTitle } : t))
+    );
+  };
+
   return (
     <>
-      <h1 className="text-4xl text-fuchsia-600 font-bold">
-        Tailwind работает 🌈
-      </h1>
+      <h6 className="text-4xl text-fuchsia-600 font-bold">
+        Tailwind не работает!
+      </h6>
 
       <div className="max-w-7xl w-full flex flex-col">
         <div className="flex items-center justify-center">
@@ -91,6 +102,7 @@ const App = () => {
             onAdd={addTask}
             isValue={isValue}
             setIsValue={setIsValue}
+            onEdit={onEdit}
           />
         </div>
       </div>

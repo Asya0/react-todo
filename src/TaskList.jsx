@@ -23,18 +23,19 @@ const TaskList = ({
         <IoIosAdd size={40} onClick={() => onAdd(isValue)} />
       </div>
 
-      {tasks.map((task) => (
-        <Task
-          key={task.id}
-          id={task.id}
-          {...task}
-          title={task.title}
-          isCompleted={task.isCompleted}
-          onCheck={onCheck}
-          onRemove={onRemove}
-          onEdit={onEdit}
-        />
-      ))}
+      {Array.isArray(tasks) &&
+        tasks.map((task) => (
+          <Task
+            key={task.id}
+            id={task.id}
+            {...task}
+            title={task.title}
+            isCompleted={task.isCompleted}
+            onCheck={onCheck}
+            onRemove={onRemove}
+            onEdit={onEdit}
+          />
+        ))}
     </>
   );
 };

@@ -17,7 +17,7 @@ const Task = ({ id, title, isCompleted, onRemove, onCheck, onEdit }) => {
         className="w-full rounded-lg border border-gray-200 flex items-center justify-between p-4"
         style={{ display: "flex", alignItems: "center" }}
       >
-        {id}
+        {/* {id} */}
         <input
           className="mr-2 w-6 h-6 rounded-lg"
           type="checkbox"
@@ -66,7 +66,7 @@ const Task = ({ id, title, isCompleted, onRemove, onCheck, onEdit }) => {
         <CiEdit
           size={20}
           // onClick={() => onEdit(id, prompt("Редактировать задачу", title))}
-          Редактировать
+          // Редактировать
         />
 
         <CiTrash

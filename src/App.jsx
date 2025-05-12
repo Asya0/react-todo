@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { useState, useEffect, React } from "react";
 import TaskList from "./TaskList";
 import "./App.css";
@@ -68,10 +69,11 @@ const App = () => {
       return;
     }
     const newTask = {
-      id: taskList.length + 1,
+      id: uuidv4(),
       title: isValue,
       isCompleted: false,
     };
+    console.log("id всех задач: ", newTask.id);
     setTaskList((prev) => [...prev, newTask]);
     setIsValue("");
   };

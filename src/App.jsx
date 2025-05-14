@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { useState, useEffect, React } from "react";
 import TaskList from "./TaskList";
+import Columns from "./Components/Dashboard/Columns";
 import "./App.css";
 import "./index.css";
 
@@ -18,24 +19,12 @@ const App = () => {
     }
   });
 
-  // const [tasks, setTasks] = useState([
-  //   { id: 1, title: " work ", isCompleted: true },
-  //   { id: 2, title: " покурить ", isCompleted: false },
-  //   { id: 3, title: " что-то типа обэда ", isCompleted: true },
-  //   { id: 4, title: " чтение ", isCompleted: false },
-  //   { id: 5, title: " учеба ", isCompleted: false },
-  // ]);
-
   // Сохранение задач в localStorage при изменении taskList
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(taskList));
     console.log("taskList", taskList);
     // сохраняет, но не отображает на экране все задачи
   }, [taskList]);
-
-  // useEffect(() => {
-  //   console.log("обновление setTasks");
-  // }, [setTasks]);
 
   //TODO находить нужную задачу и менять ее isChecked, по id
   const checkTask = (id) => {
@@ -72,6 +61,7 @@ const App = () => {
       id: uuidv4(),
       title: isValue,
       isCompleted: false,
+      status: "not_started",
     };
     console.log("id всех задач: ", newTask.id);
     setTaskList((prev) => [...prev, newTask]);
@@ -96,6 +86,8 @@ const App = () => {
             To do:
           </h1>
         </div>
+        <Columns tasks={taskList} onEdit={onEdit} />
+
         <div className="flex flex-col items-start gap-y-4">
           <TaskList
             tasks={taskList}

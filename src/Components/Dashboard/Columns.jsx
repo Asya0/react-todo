@@ -2,7 +2,7 @@ import { React } from "react";
 
 import "../Dashboard/Columns.css";
 import Task from "../../Task";
-const Columns = ({ tasks, onEdit }) => {
+const Columns = ({ tasks, onEdit, onCheck, onRemove }) => {
   return (
     <div className="columns">
       <div className="column">
@@ -13,8 +13,8 @@ const Columns = ({ tasks, onEdit }) => {
             <Task
               key={task.id}
               {...task}
-              // onCheck={onCheck}
-              // onRemove={onRemove}
+              onCheck={onCheck}
+              onRemove={onRemove}
               onEdit={onEdit}
             />
           ))}

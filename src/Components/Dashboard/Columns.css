@@ -6,4 +6,8 @@
 }
 .column {
   margin-right: 10px;
+  background-color: #9fa7ae;
+  border-radius: 10px;
+  padding: 5px 10px;
+  width: 100%;
 }

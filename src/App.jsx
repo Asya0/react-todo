@@ -1,7 +1,14 @@
+//библиотеки
 import { v4 as uuidv4 } from "uuid";
 import { useState, useEffect, React } from "react";
+import { DndContext } from "@dnd-kit/core";
+
+//компоненты
 import TaskList from "./TaskList";
+import AddTask from "./Components/AddTask";
 import Columns from "./Components/Dashboard/Columns";
+
+//стили
 import "./App.css";
 import "./index.css";
 
@@ -12,7 +19,11 @@ const App = () => {
       const savedTasks = localStorage.getItem("tasks");
       const parsedTasks = savedTasks ? JSON.parse(savedTasks) : [];
       console.log("Loaded tasks from localStorage:", parsedTasks);
-      return parsedTasks;
+      const normalizedTask = parsedTasks.map((task) => ({
+        ...task,
+        status: task.status || "not_started",
+      }));
+      return normalizedTask;
     } catch (e) {
       console.log("Ошибка при чтении из localStorage: ", e);
       return [];
@@ -86,9 +97,17 @@ const App = () => {
             To do:
           </h1>
         </div>
-        <Columns tasks={taskList} onEdit={onEdit} />
+        <AddTask onAdd={addTask} isValue={isValue} setIsValue={setIsValue} />
+        <DndContext>
+          <Columns
+            tasks={taskList}
+            onEdit={onEdit}
+            onCheck={checkTask}
+            onRemove={removeTask}
+          />
+        </DndContext>
 
-        <div className="flex flex-col items-start gap-y-4">
+        {/* <div className="flex flex-col items-start gap-y-4">
           <TaskList
             tasks={taskList}
             onCheck={checkTask}
@@ -98,7 +117,7 @@ const App = () => {
             setIsValue={setIsValue}
             onEdit={onEdit}
           />
-        </div>
+        </div> */}
       </div>
     </>
   );

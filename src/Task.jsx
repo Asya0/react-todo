@@ -1,5 +1,6 @@
 import { React, useState } from "react";
 import { CiTrash, CiEdit, CiCircleCheck } from "react-icons/ci";
+import "./Components/Task.css";
 
 const Task = ({ id, title, isCompleted, onRemove, onCheck, onEdit }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -13,10 +14,7 @@ const Task = ({ id, title, isCompleted, onRemove, onCheck, onEdit }) => {
 
   return (
     <>
-      <div
-        className="w-full rounded-lg border border-gray-200 flex items-center justify-between p-4"
-        style={{ display: "flex", alignItems: "center" }}
-      >
+      <div className="task" style={{ display: "flex", alignItems: "center" }}>
         {/* {id} */}
         <input
           className="mr-2 w-6 h-6 rounded-lg"

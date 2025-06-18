@@ -1,10 +1,20 @@
 import { React, useState } from "react";
+import { useDraggable } from "@dnd-kit/core";
 import { CiTrash, CiEdit, CiCircleCheck } from "react-icons/ci";
+
 import "./Components/Task.css";
 
 const Task = ({ id, title, isCompleted, onRemove, onCheck, onEdit }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
+
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
+  const style = {
+    transform: transform
+      ? `translate(${transform.x}px, ${transform.y}px)`
+      : undefined,
+    cursor: "pointer",
+  };
 
   const saveEdit = () => {
     console.log("сохранение редактирования задачи");
@@ -14,8 +24,14 @@ const Task = ({ id, title, isCompleted, onRemove, onCheck, onEdit }) => {
 
   return (
     <>
-      <div className="task" style={{ display: "flex", alignItems: "center" }}>
-        {/* {id} */}
+      <div
+        className="task"
+        ref={setNodeRef}
+        style={style}
+        // style={{ display: "flex", alignItems: "center" }}>
+        {...listeners}
+        {...attributes}
+      >
         <input
           className="mr-2 w-6 h-6 rounded-lg"
           type="checkbox"
@@ -50,7 +66,11 @@ const Task = ({ id, title, isCompleted, onRemove, onCheck, onEdit }) => {
           </div>
         ) : (
           <span
-            style={{ textDecoration: isCompleted ? "line-through " : "" }}
+            style={{
+              textDecoration: isCompleted ? "line-through " : "",
+              textDecorationColor: isCompleted ? "#a3a3a3 " : "",
+              color: isCompleted ? "#a3a3a3" : "",
+            }}
             className={`flex-grow ${isCompleted ? "text-blue-600" : ""}`}
             onDoubleClick={() => {
               setEditedTitle(title);

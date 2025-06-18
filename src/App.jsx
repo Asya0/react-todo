@@ -2,9 +2,9 @@
 import { v4 as uuidv4 } from "uuid";
 import { useState, useEffect, React } from "react";
 import { DndContext } from "@dnd-kit/core";
+// import { Draggable } from "./Draggable";
 
 //компоненты
-import TaskList from "./TaskList";
 import AddTask from "./Components/AddTask";
 import Columns from "./Components/Dashboard/Columns";
 
@@ -74,7 +74,7 @@ const App = () => {
       isCompleted: false,
       status: "not_started",
     };
-    console.log("id всех задач: ", newTask.id);
+    console.log("id созданной задачи: ", newTask.id);
     setTaskList((prev) => [...prev, newTask]);
     setIsValue("");
   };
@@ -82,6 +82,20 @@ const App = () => {
   const onEdit = (id, newTitle) => {
     setTaskList((prev) =>
       prev.map((t) => (t.id === id ? { ...t, title: newTitle } : t))
+    );
+  };
+
+  const handleDragEnd = (e) => {
+    const { active, over } = e;
+    if (!over) return;
+
+    const taskId = active.id;
+    const newStatus = over.id;
+
+    setTaskList((prev) =>
+      prev.map((task) =>
+        task.id === taskId ? { ...task, status: newStatus } : task
+      )
     );
   };
 
@@ -98,7 +112,7 @@ const App = () => {
           </h1>
         </div>
         <AddTask onAdd={addTask} isValue={isValue} setIsValue={setIsValue} />
-        <DndContext>
+        <DndContext onDragEnd={handleDragEnd}>
           <Columns
             tasks={taskList}
             onEdit={onEdit}
@@ -106,18 +120,6 @@ const App = () => {
             onRemove={removeTask}
           />
         </DndContext>
-
-        {/* <div className="flex flex-col items-start gap-y-4">
-          <TaskList
-            tasks={taskList}
-            onCheck={checkTask}
-            onRemove={removeTask}
-            onAdd={addTask}
-            isValue={isValue}
-            setIsValue={setIsValue}
-            onEdit={onEdit}
-          />
-        </div> */}
       </div>
     </>
   );

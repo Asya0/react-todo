@@ -1,5 +1,5 @@
 //библиотеки
-import { React, useEffect } from "react";
+import { React } from "react";
 import { useDroppable } from "@dnd-kit/core";
 //компоненты
 import Task from "../../Task";
@@ -8,16 +8,13 @@ const Column = ({ title, tasks, onCheck, onRemove, onEdit, status }) => {
     id: status,
   });
 
-  useEffect(() => {
-    console.log(isOver, "isOver");
-    console.log("bpvtytybt");
-  }, []);
+  // console.log("Column", title, tasks);
 
   return (
     <div
       // className="column"
+      className={`column ${isOver ? "bg-blue-600" : ""}`} // чтобы было видно при наведении
       ref={setNodeRef}
-      className={`column ${isOver ? "bg-blue-100" : ""}`} // чтобы было видно при наведении
     >
       <h3>{title}</h3>
       {tasks
@@ -25,10 +22,11 @@ const Column = ({ title, tasks, onCheck, onRemove, onEdit, status }) => {
         .map((task) => (
           <Task
             key={task.id}
-            {...task}
+            id={task.id}
             onCheck={onCheck}
             onRemove={onRemove}
             onEdit={onEdit}
+            {...task}
           />
         ))}
     </div>

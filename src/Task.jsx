@@ -1,10 +1,10 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CiTrash, CiEdit, CiCircleCheck } from "react-icons/ci";
 
 import "./Components/Task.css";
 
-const Task = ({ id, title, isCompleted, onRemove, onCheck, onEdit }) => {
+const Task = ({ id, key, title, isCompleted, onRemove, onCheck, onEdit }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
 
@@ -13,8 +13,11 @@ const Task = ({ id, title, isCompleted, onRemove, onCheck, onEdit }) => {
     transform: transform
       ? `translate(${transform.x}px, ${transform.y}px)`
       : undefined,
-    cursor: "pointer",
+    cursor: "grab",
   };
+  useEffect(() => {
+    console.log("render task", title, id, key);
+  }, []);
 
   const saveEdit = () => {
     console.log("сохранение редактирования задачи");
@@ -28,7 +31,7 @@ const Task = ({ id, title, isCompleted, onRemove, onCheck, onEdit }) => {
         className="task"
         ref={setNodeRef}
         style={style}
-        // style={{ display: "flex", alignItems: "center" }}>
+        // style={{ display: "flex", alignItems: "center" }}
         {...listeners}
         {...attributes}
       >
@@ -83,14 +86,17 @@ const Task = ({ id, title, isCompleted, onRemove, onCheck, onEdit }) => {
 
         <CiEdit
           size={20}
-          // onClick={() => onEdit(id, prompt("Редактировать задачу", title))}
-          // Редактировать
+          onClick={() => onEdit(id, prompt("Редактировать задачу", title))}
         />
 
         <CiTrash
           className="cursor-pointer"
           size={20}
-          onClick={() => onRemove(id)}
+          onClick={() => {
+            console.log("CLICKED");
+            onRemove(id);
+            console.log("delete task");
+          }}
         />
       </div>
       <div

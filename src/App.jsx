@@ -34,34 +34,9 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(taskList));
     console.log("taskList", taskList);
-    // сохраняет, но не отображает на экране все задачи
+    // console.log("taskList changed:", taskList);
   }, [taskList]);
 
-  //TODO находить нужную задачу и менять ее isChecked, по id
-  const checkTask = (id) => {
-    console.log("вызов checkTask");
-    setTaskList((prevTasks) =>
-      prevTasks.map((t) =>
-        t.id === id ? { ...t, isCompleted: !t.isCompleted } : t
-      )
-    );
-  };
-  const removeTask = (id) => {
-    setTaskList((prevTasks) => prevTasks.filter((t) => t.id !== id));
-  };
-
-  // const addTask = (title) => {
-  //   setTaskList((prevTasks) => {
-  //     if (isValue === "" || isValue.trim() === "") {
-  //       alert("введите название задачи");
-  //       setIsValue("");
-  //       // return;
-  //     }
-  //     const newTask = { id: prevTasks.length + 1, title, isCompleted: false };
-  //     setIsValue("");
-  //     return [...prevTasks, newTask];
-  //   });
-  // };
   const addTask = () => {
     if (isValue.trim() === "") {
       alert("введите название задачи");
@@ -83,6 +58,21 @@ const App = () => {
     setTaskList((prev) =>
       prev.map((t) => (t.id === id ? { ...t, title: newTitle } : t))
     );
+  };
+  //TODO находить нужную задачу и менять ее isChecked, по id
+  const checkTask = (id) => {
+    console.log("вызов checkTask");
+    setTaskList((prevTasks) =>
+      prevTasks.map((t) =>
+        t.id === id ? { ...t, isCompleted: !t.isCompleted } : t
+      )
+    );
+  };
+  const removeTask = (id) => {
+    setTaskList((prevTasks) => {
+      return prevTasks.filter((t) => t.id !== id);
+    });
+    console.log("удаление задачи");
   };
 
   const handleDragEnd = (e) => {

@@ -2,14 +2,11 @@
 import { React } from "react";
 
 //компоненты
-import Task from "../../Task";
 import Column from "./Column";
 //стили
-import "../Dashboard/Columns.css";
 const Columns = ({ tasks, onEdit, onCheck, onRemove }) => {
   return (
-    <div className="columns">
-      {/* вынести column в отдельный компонент */}
+    <div className="flex gap-3 justify-center m-auto w-full">
       <Column
         status="not_started"
         title="Не начато"

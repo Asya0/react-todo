@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CiTrash, CiEdit, CiCircleCheck } from "react-icons/ci";
+import { IoIosMove } from "react-icons/io";
 
 import "./Components/Task.css";
 
@@ -13,7 +14,7 @@ const Task = ({ id, key, title, isCompleted, onRemove, onCheck, onEdit }) => {
     transform: transform
       ? `translate(${transform.x}px, ${transform.y}px)`
       : undefined,
-    cursor: "grab",
+    // cursor: "grab",
   };
   useEffect(() => {
     console.log("render task", title, id, key);
@@ -32,11 +33,9 @@ const Task = ({ id, key, title, isCompleted, onRemove, onCheck, onEdit }) => {
         ref={setNodeRef}
         style={style}
         // style={{ display: "flex", alignItems: "center" }}
-        {...listeners}
-        {...attributes}
       >
         <input
-          className="mr-2 w-6 h-6 rounded-lg"
+          className="mr-2 w-6 h-6 rounded-xl"
           type="checkbox"
           checked={isCompleted}
           onChange={() => {
@@ -63,6 +62,7 @@ const Task = ({ id, key, title, isCompleted, onRemove, onCheck, onEdit }) => {
               }}
             />
             <CiCircleCheck
+              size={10}
               onClick={saveEdit}
               style={{ position: "absolute", right: 5 }}
             />
@@ -74,7 +74,7 @@ const Task = ({ id, key, title, isCompleted, onRemove, onCheck, onEdit }) => {
               textDecorationColor: isCompleted ? "#a3a3a3 " : "",
               color: isCompleted ? "#a3a3a3" : "",
             }}
-            className={`flex-grow ${isCompleted ? "text-blue-600" : ""}`}
+            className={`flex-grow ${isCompleted ? "text-green-600" : ""}`}
             onDoubleClick={() => {
               setEditedTitle(title);
               setIsEditing(true);
@@ -98,6 +98,7 @@ const Task = ({ id, key, title, isCompleted, onRemove, onCheck, onEdit }) => {
             console.log("delete task");
           }}
         />
+        <IoIosMove size={20} {...listeners} {...attributes} />
       </div>
       <div
         onClick={() => {

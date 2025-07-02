@@ -1,17 +1,22 @@
 import { React } from "react";
 import { IoIosAdd } from "react-icons/io";
-import "../Components/AddTask.css";
 
 const AddTask = ({ onAdd, isValue, setIsValue }) => {
   return (
-    <div className="add-task">
+    <div className="flex items-center justify-center mb-10 w-3 m-auto">
       <input
+        className=" text-white pl-10 pr-10 pt-3 pb-3 rounded-md bg-[#f1ffed15]"
         type="text"
         value={isValue}
-        placeholder="название задачи"
+        placeholder="введите название задачи"
         onChange={(e) => setIsValue(e.target.value)}
       />
-      <IoIosAdd size={40} onClick={() => onAdd(isValue)} />
+      <IoIosAdd
+        size={30}
+        onClick={() => onAdd(isValue)}
+        // style={{ position: "absolute" }}
+        // className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white"
+      />
     </div>
   );
 };

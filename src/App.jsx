@@ -91,15 +91,9 @@ const App = () => {
 
   return (
     <>
-      <h6 className="text-4xl text-fuchsia-600 font-bold">
-        Tailwind не работает!
-      </h6>
-
-      <div className="max-w-7xl w-full flex flex-col">
+      <div className="w-full  flex flex-col justify-center">
         <div className="flex items-center justify-center">
-          <h1 className="text-3xl font-bold underline hover:text-sky-300">
-            To do:
-          </h1>
+          <h1 className="text-3xl font-bold mb-10">Список задач</h1>
         </div>
         <AddTask onAdd={addTask} isValue={isValue} setIsValue={setIsValue} />
         <DndContext onDragEnd={handleDragEnd}>

@@ -63,9 +63,19 @@ const App = () => {
   const checkTask = (id) => {
     console.log("вызов checkTask");
     setTaskList((prevTasks) =>
-      prevTasks.map((t) =>
-        t.id === id ? { ...t, isCompleted: !t.isCompleted } : t
-      )
+      prevTasks.map((t) => {
+        // t.id === id ?
+        // { ...t, isCompleted: !t.isCompleted } : t;
+        if (t.id === id) {
+          const isNowCompleted = !t.isCompleted;
+          return {
+            ...t,
+            isCompleted: isNowCompleted,
+            status: isNowCompleted ? "done" : "not_started",
+          };
+        }
+        return t;
+      })
     );
   };
   const removeTask = (id) => {
@@ -83,9 +93,16 @@ const App = () => {
     const newStatus = over.id;
 
     setTaskList((prev) =>
-      prev.map((task) =>
-        task.id === taskId ? { ...task, status: newStatus } : task
-      )
+      prev.map((task) => {
+        if (task.id === taskId) {
+          return {
+            ...task,
+            status: newStatus,
+            isCompleted: newStatus === "done" ? true : false,
+          };
+        }
+        return task;
+      })
     );
   };
 

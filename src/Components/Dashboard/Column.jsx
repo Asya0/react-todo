@@ -11,7 +11,6 @@ const Column = ({ title, tasks, onCheck, onRemove, onEdit, status }) => {
   return (
     <div
       className="mr-5 bg-[#bdc0c2] rounded-2xl w-full pt-2 pr-3 pb-2 pl-3"
-      // className={`column ${isOver ? "bg-blue-600" : ""}`} // чтобы было видно при наведении
       ref={setNodeRef}
       style={{
         maxWidth: 400,
@@ -28,6 +27,7 @@ const Column = ({ title, tasks, onCheck, onRemove, onEdit, status }) => {
             onRemove={onRemove}
             onEdit={onEdit}
             {...task}
+            // isCompleted={task.status}
           />
         ))}
     </div>

@@ -4,7 +4,7 @@ import { React } from "react";
 //компоненты
 import Column from "./Column";
 //стили
-const Columns = ({ tasks, onEdit, onCheck, onRemove }) => {
+const Columns = ({ tasks, onEdit, onCheck, onRemove, changePriority, isPriority }) => {
   return (
     <div className="flex gap-3 justify-center m-auto w-full">
       <Column
@@ -14,6 +14,8 @@ const Columns = ({ tasks, onEdit, onCheck, onRemove }) => {
         onCheck={onCheck}
         onRemove={onRemove}
         onEdit={onEdit}
+        changePriority={changePriority}
+        isPriority={isPriority}
       />
       <Column
         status="process"
@@ -22,6 +24,8 @@ const Columns = ({ tasks, onEdit, onCheck, onRemove }) => {
         onCheck={onCheck}
         onRemove={onRemove}
         onEdit={onEdit}
+        changePriority={changePriority}
+        isPriority={isPriority}
       />
       <Column
         status="done"
@@ -30,6 +34,8 @@ const Columns = ({ tasks, onEdit, onCheck, onRemove }) => {
         onCheck={onCheck}
         onRemove={onRemove}
         onEdit={onEdit}
+        changePriority={changePriority}
+        isPriority={isPriority}
       />
     </div>
   );

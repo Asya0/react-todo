@@ -3,7 +3,7 @@ import { React } from "react";
 import { useDroppable } from "@dnd-kit/core";
 //компоненты
 import Task from "../../Task";
-const Column = ({ title, tasks, onCheck, onRemove, onEdit, status }) => {
+const Column = ({ title, tasks, onCheck, onRemove, onEdit, status, changePriority, isPriority }) => {
   const { setNodeRef } = useDroppable({
     id: status,
   });
@@ -22,7 +22,10 @@ const Column = ({ title, tasks, onCheck, onRemove, onEdit, status }) => {
         .map((task) => (
           <Task
             key={task.id}
+            task={task}
             id={task.id}
+            changePriority={changePriority}
+            isPriority={isPriority}
             onCheck={onCheck}
             onRemove={onRemove}
             onEdit={onEdit}

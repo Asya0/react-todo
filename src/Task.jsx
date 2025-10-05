@@ -5,7 +5,8 @@ import { IoIosMove } from "react-icons/io";
 
 import "./Components/Task.css";
 
-const Task = ({ id, key, title, isCompleted, onRemove, onCheck, onEdit }) => {
+const Task = ({ key, onRemove, onCheck, onEdit, changePriority, task }) => {
+  const { id, title, isCompleted, isPriority } = task;
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
 
@@ -32,7 +33,7 @@ const Task = ({ id, key, title, isCompleted, onRemove, onCheck, onEdit }) => {
         className="task"
         ref={setNodeRef}
         style={style}
-        // style={{ display: "flex", alignItems: "center" }}
+      // style={{ display: "flex", alignItems: "center" }}
       >
         <input
           className="mr-2 w-6 h-6 rounded-xl"
@@ -84,6 +85,12 @@ const Task = ({ id, key, title, isCompleted, onRemove, onCheck, onEdit }) => {
           </span>
         )}
 
+        <div>
+          {task.priority === "low" && "🟢"}
+          {task.priority === "medium" && "🟡"}
+          {task.priority === "high" && "🔴"}
+        </div>
+
         <CiEdit
           size={20}
           onClick={() => onEdit(id, prompt("Редактировать задачу", title))}
@@ -102,7 +109,7 @@ const Task = ({ id, key, title, isCompleted, onRemove, onCheck, onEdit }) => {
       </div>
       <div
         onClick={() => {
-          console.log("Tasl.jsx");
+          console.log("Task.jsx");
         }}
       ></div>
     </>

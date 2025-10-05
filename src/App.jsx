@@ -14,6 +14,7 @@ import "./index.css";
 
 const App = () => {
   const [isValue, setIsValue] = useState("");
+  const [isPriority, setIsPriority] = useState("low")
   const [taskList, setTaskList] = useState(() => {
     try {
       const savedTasks = localStorage.getItem("tasks");
@@ -37,7 +38,7 @@ const App = () => {
     // console.log("taskList changed:", taskList);
   }, [taskList]);
 
-  const addTask = () => {
+  const addTask = (isValue) => {
     if (isValue.trim() === "") {
       alert("введите название задачи");
       setIsValue("");
@@ -48,8 +49,10 @@ const App = () => {
       title: isValue,
       isCompleted: false,
       status: "not_started",
+      priority: isPriority,
     };
     console.log("id созданной задачи: ", newTask.id);
+    console.log("приоритет созданной задачи: ", newTask.priority);
     setTaskList((prev) => [...prev, newTask]);
     setIsValue("");
   };
@@ -85,6 +88,22 @@ const App = () => {
     console.log("удаление задачи");
   };
 
+  const changePriority = () => {
+    if (newTask.priority === "medium") {
+      setIsPriority("medium")
+      console.log("приоритет - ", isPriority)
+    }
+    else if (newTask.priority === "high") {
+      setIsPriority("high")
+      console.log("приоритет - ", isPriority)
+    }
+    else {
+      setIsPriority("low")
+      console.log("приоритет - ", isPriority)
+    }
+
+  }
+
   const handleDragEnd = (e) => {
     const { active, over } = e;
     if (!over) return;
@@ -110,15 +129,17 @@ const App = () => {
     <>
       <div className="w-full  flex flex-col justify-center">
         <div className="flex items-center justify-center">
-          <h1 className="text-3xl font-bold mb-10">Список задач</h1>
+          <h1 className="text-3xl font-bold mb-10">Dashboard</h1>
         </div>
-        <AddTask onAdd={addTask} isValue={isValue} setIsValue={setIsValue} />
+        <AddTask onAdd={addTask} isValue={isValue} setIsValue={setIsValue} isPriority={isPriority} setIsPriority={setIsPriority} />
         <DndContext onDragEnd={handleDragEnd}>
           <Columns
             tasks={taskList}
             onEdit={onEdit}
             onCheck={checkTask}
             onRemove={removeTask}
+            onChangePriority={changePriority}
+            isPriority={isPriority}
           />
         </DndContext>
       </div>

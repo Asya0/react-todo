@@ -6,6 +6,7 @@ const TaskList = ({
   onRemove,
   // onAdd,
   onEdit,
+  priority,
   // isValue,
   // setIsValue,
 }) => {
@@ -20,6 +21,7 @@ const TaskList = ({
             {...task}
             title={task.title}
             isCompleted={task.isCompleted}
+            priority={priority.color}
             onCheck={onCheck}
             onRemove={onRemove}
             onEdit={onEdit}

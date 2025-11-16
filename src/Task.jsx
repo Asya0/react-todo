@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CiTrash, CiEdit, CiCircleCheck } from "react-icons/ci";
-import { IoIosMove } from "react-icons/io";
+import { IoIosMove, IoMdCheckmark } from "react-icons/io";
 
 import "./Components/Task.css";
 
@@ -35,14 +35,26 @@ const Task = ({ key, onRemove, onCheck, onEdit, changePriority, task }) => {
         style={style}
       // style={{ display: "flex", alignItems: "center" }}
       >
-        <input
-          className="mr-2 w-6 h-6 rounded-xl"
-          type="checkbox"
-          checked={isCompleted}
-          onChange={() => {
-            onCheck(id);
-          }}
-        />
+        <label className="mr-2 flex items-center cursor-pointer relative">
+          <input
+            type="checkbox"
+            checked={isCompleted}
+            onChange={() => onCheck(id)}
+            className="peer sr-only"
+          />
+
+          <div
+            className="
+          w-4 h-4 rounded border border-gray-400
+          flex items-center justify-center
+          peer-checked:border-slate-500
+        "
+          >
+            {isCompleted && (
+              <IoMdCheckmark size="22" className="text-slate-300 text-lg m-0" />
+            )}
+          </div>
+        </label>
 
         {isEditing ? (
           <div
@@ -75,7 +87,7 @@ const Task = ({ key, onRemove, onCheck, onEdit, changePriority, task }) => {
               textDecorationColor: isCompleted ? "#a3a3a3 " : "",
               color: isCompleted ? "#a3a3a3" : "",
             }}
-            className={`flex-grow ${isCompleted ? "text-green-600" : ""}`}
+            className={`flex-grow max-w-[220px] w-[220px] ${isCompleted ? "text-green-600" : ""}`}
             onDoubleClick={() => {
               setEditedTitle(title);
               setIsEditing(true);
@@ -91,21 +103,23 @@ const Task = ({ key, onRemove, onCheck, onEdit, changePriority, task }) => {
           {task.priority === "high" && "🔴"}
         </div>
 
-        <CiEdit
-          size={20}
-          onClick={() => onEdit(id, prompt("Редактировать задачу", title))}
-        />
+        <div className="task-tools">
+          <CiEdit
+            size={20}
+            onClick={() => onEdit(id, prompt("Редактировать задачу", title))}
+          />
 
-        <CiTrash
-          className="cursor-pointer"
-          size={20}
-          onClick={() => {
-            console.log("CLICKED");
-            onRemove(id);
-            console.log("delete task");
-          }}
-        />
-        <IoIosMove size={20} {...listeners} {...attributes} />
+          <CiTrash
+            className="cursor-pointer"
+            size={20}
+            onClick={() => {
+              console.log("CLICKED");
+              onRemove(id);
+              console.log("delete task");
+            }}
+          />
+          <IoIosMove size={20} {...listeners} {...attributes} />
+        </div>
       </div>
       <div
         onClick={() => {

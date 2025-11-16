@@ -127,7 +127,7 @@ const App = () => {
 
   return (
     <>
-      <div className="w-full  flex flex-col justify-center">
+      <div className="w-full  flex flex-col justify-center ">
         <div className="flex items-center justify-center">
           <h1 className="text-3xl font-bold mb-10">Dashboard</h1>
         </div>

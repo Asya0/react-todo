@@ -10,7 +10,7 @@ const Column = ({ title, tasks, onCheck, onRemove, onEdit, status, changePriorit
 
   return (
     <div
-      className="mr-5 bg-[#bdc0c2] rounded-2xl w-full pt-2 pr-3 pb-2 pl-3"
+      className="mr-5 bg-[#262626] rounded-xl w-full pt-2 pr-3 pb-2 pl-3"
       ref={setNodeRef}
       style={{
         maxWidth: 400,

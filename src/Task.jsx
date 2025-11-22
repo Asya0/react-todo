@@ -1,12 +1,14 @@
-import { React, useState, useEffect } from "react";
+import  React, {useState, useEffect } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CiTrash, CiEdit, CiCircleCheck } from "react-icons/ci";
 import { IoIosMove, IoMdCheckmark } from "react-icons/io";
 
 import "./Components/Task.css";
 
-const Task = ({ key, onRemove, onCheck, onEdit, changePriority, task }) => {
-  const { id, title, isCompleted, isPriority } = task;
+const TaskComponent = ({ id, title, onRemove, onCheck, onEdit, task, isCompleted }) => {
+
+  // const Task = React.memo() => { // почему-то при React.memo undefined
+  // const { id, title, isCompleted, } = task;
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
 
@@ -18,7 +20,7 @@ const Task = ({ key, onRemove, onCheck, onEdit, changePriority, task }) => {
     // cursor: "grab",
   };
   useEffect(() => {
-    console.log("render task", title, id, key);
+    console.log("render task", title, id);
   }, []);
 
   const saveEdit = () => {
@@ -129,4 +131,7 @@ const Task = ({ key, onRemove, onCheck, onEdit, changePriority, task }) => {
     </>
   );
 };
+
+const Task = React.memo(TaskComponent);
+
 export default Task;

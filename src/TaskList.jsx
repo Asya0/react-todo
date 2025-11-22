@@ -16,9 +16,9 @@ const TaskList = ({
       {Array.isArray(tasks) &&
         tasks.map((task) => (
           <Task
-            key={task.id}
-            id={task.id}
-            {...task}
+            // key={task.id}
+            // id={task.id}
+            // {...task}
             title={task.title}
             isCompleted={task.isCompleted}
             priority={priority.color}

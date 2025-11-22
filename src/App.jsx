@@ -1,6 +1,6 @@
 //библиотеки
 import { v4 as uuidv4 } from "uuid";
-import { useState, useEffect, React } from "react";
+import { useState, useEffect, useCallback, React } from "react";
 import { DndContext } from "@dnd-kit/core";
 // import { Draggable } from "./Draggable";
 
@@ -18,7 +18,7 @@ const App = () => {
   const [taskList, setTaskList] = useState(() => {
     try {
       const savedTasks = localStorage.getItem("tasks");
-      const parsedTasks = savedTasks ? JSON.parse(savedTasks) : [];
+      const parsedTasks = savedTasks ? JSON.parse(savedTasks) : [];  // называется "ленивый useState", чтобы не читать localStorage на каждом рендере
       console.log("Loaded tasks from localStorage:", parsedTasks);
       const normalizedTask = parsedTasks.map((task) => ({
         ...task,
@@ -38,7 +38,10 @@ const App = () => {
     // console.log("taskList changed:", taskList);
   }, [taskList]);
 
-  const addTask = (isValue) => {
+
+
+
+  const addTask = useCallback((isValue) => {
     if (isValue.trim() === "") {
       alert("введите название задачи");
       setIsValue("");
@@ -51,24 +54,23 @@ const App = () => {
       status: "not_started",
       priority: isPriority,
     };
-    console.log("id созданной задачи: ", newTask.id);
+    console.log("Задача создана, id созданной задачи: ", newTask.id);
     console.log("приоритет созданной задачи: ", newTask.priority);
-    setTaskList((prev) => [...prev, newTask]);
+    setTaskList((prev) => [newTask, ...prev]); // это называется "функциональное обновление", чтобы не включать tasks в зависимости
     setIsValue("");
-  };
+  }, [isPriority]); // taskList не нужен в зависимости, потому что используется функц. обновление
 
-  const onEdit = (id, newTitle) => {
+  const onEdit = useCallback((id, newTitle) => {
     setTaskList((prev) =>
       prev.map((t) => (t.id === id ? { ...t, title: newTitle } : t))
     );
-  };
+  },[]);
+
   //TODO находить нужную задачу и менять ее isChecked, по id
-  const checkTask = (id) => {
+  const checkTask = useCallback((id) => {
     console.log("вызов checkTask");
     setTaskList((prevTasks) =>
       prevTasks.map((t) => {
-        // t.id === id ?
-        // { ...t, isCompleted: !t.isCompleted } : t;
         if (t.id === id) {
           const isNowCompleted = !t.isCompleted;
           return {
@@ -80,31 +82,15 @@ const App = () => {
         return t;
       })
     );
-  };
-  const removeTask = (id) => {
-    setTaskList((prevTasks) => {
-      return prevTasks.filter((t) => t.id !== id);
-    });
-    console.log("удаление задачи");
-  };
+  },[]);
 
-  const changePriority = () => {
-    if (newTask.priority === "medium") {
-      setIsPriority("medium")
-      console.log("приоритет - ", isPriority)
-    }
-    else if (newTask.priority === "high") {
-      setIsPriority("high")
-      console.log("приоритет - ", isPriority)
-    }
-    else {
-      setIsPriority("low")
-      console.log("приоритет - ", isPriority)
-    }
+  const deleteTask = useCallback((id) => {
+    setTaskList(prev => prev.filter(t => t.id != id))
+    console.log("задача удалена");
+  }, []);
 
-  }
 
-  const handleDragEnd = (e) => {
+  const handleDragEnd = useCallback((e) => {
     const { active, over } = e;
     if (!over) return;
 
@@ -123,7 +109,7 @@ const App = () => {
         return task;
       })
     );
-  };
+  }, []);
 
   return (
     <>
@@ -137,8 +123,7 @@ const App = () => {
             tasks={taskList}
             onEdit={onEdit}
             onCheck={checkTask}
-            onRemove={removeTask}
-            onChangePriority={changePriority}
+            onRemove={deleteTask}
             isPriority={isPriority}
           />
         </DndContext>

@@ -2,11 +2,11 @@
 import { v4 as uuidv4 } from "uuid";
 import { useState, useEffect, useCallback, React } from "react";
 import { DndContext } from "@dnd-kit/core";
-// import { Draggable } from "./Draggable";
 
 //компоненты
 import AddTask from "./Components/AddTask";
 import Columns from "./Components/Dashboard/Columns";
+import {useTasks, useTasksDispatch} from "./context/TaskContext";
 
 //стили
 import "./App.css";
@@ -14,81 +14,51 @@ import "./index.css";
 
 const App = () => {
   const [isValue, setIsValue] = useState("");
-  const [isPriority, setIsPriority] = useState("low")
-  const [taskList, setTaskList] = useState(() => {
-    try {
-      const savedTasks = localStorage.getItem("tasks");
-      const parsedTasks = savedTasks ? JSON.parse(savedTasks) : [];  // называется "ленивый useState", чтобы не читать localStorage на каждом рендере
-      console.log("Loaded tasks from localStorage:", parsedTasks);
-      const normalizedTask = parsedTasks.map((task) => ({
-        ...task,
-        status: task.status || "not_started",
-      }));
-      return normalizedTask;
-    } catch (e) {
-      console.log("Ошибка при чтении из localStorage: ", e);
-      return [];
-    }
-  });
+  const [isPriority, setIsPriority] = useState("low");
+  
+  const taskList = useTasks();
+  const dispatch = useTasksDispatch();
 
-  // Сохранение задач в localStorage при изменении taskList
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(taskList));
-    console.log("taskList", taskList);
-    // console.log("taskList changed:", taskList);
-  }, [taskList]);
-
-
-
-
-  const addTask = useCallback((isValue) => {
-    if (isValue.trim() === "") {
-      alert("введите название задачи");
-      setIsValue("");
+  const addTask = useCallback((title, priority) => {
+    if (!title || !title.trim()) {
+      alert("Введите название задачи");
       return;
     }
-    const newTask = {
-      id: uuidv4(),
-      title: isValue,
-      isCompleted: false,
-      status: "not_started",
-      priority: isPriority,
-    };
-    console.log("Задача создана, id созданной задачи: ", newTask.id);
-    console.log("приоритет созданной задачи: ", newTask.priority);
-    setTaskList((prev) => [newTask, ...prev]); // это называется "функциональное обновление", чтобы не включать tasks в зависимости
+    
+    dispatch({ 
+      type: "ADD_TASK", 
+      payload: { 
+        title: title.trim(), 
+        priority: priority || isPriority 
+      } 
+    });
     setIsValue("");
-  }, [isPriority]); // taskList не нужен в зависимости, потому что используется функц. обновление
+  }, [dispatch, isPriority]);
 
   const onEdit = useCallback((id, newTitle) => {
-    setTaskList((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, title: newTitle } : t))
-    );
-  },[]);
+    if (!newTitle || !newTitle.trim()) {
+      alert("Введите название задачи");
+      return;
+    }
+    dispatch({ 
+      type: "EDIT_TASK", 
+      payload: { id, title: newTitle.trim() } 
+    });
+  }, [dispatch]);
 
-  //TODO находить нужную задачу и менять ее isChecked, по id
   const checkTask = useCallback((id) => {
-    console.log("вызов checkTask");
-    setTaskList((prevTasks) =>
-      prevTasks.map((t) => {
-        if (t.id === id) {
-          const isNowCompleted = !t.isCompleted;
-          return {
-            ...t,
-            isCompleted: isNowCompleted,
-            status: isNowCompleted ? "done" : "not_started",
-          };
-        }
-        return t;
-      })
-    );
-  },[]);
+    dispatch({
+      type: "CHECK_TASK",
+      payload: { id }
+    });
+  }, [dispatch]);
 
   const deleteTask = useCallback((id) => {
-    setTaskList(prev => prev.filter(t => t.id != id))
-    console.log("задача удалена");
-  }, []);
-
+    dispatch({ 
+      type: "DELETE_TASK", 
+      payload: { id } 
+    });
+  }, [dispatch]);
 
   const handleDragEnd = useCallback((e) => {
     const { active, over } = e;
@@ -97,19 +67,14 @@ const App = () => {
     const taskId = active.id;
     const newStatus = over.id;
 
-    setTaskList((prev) =>
-      prev.map((task) => {
-        if (task.id === taskId) {
-          return {
-            ...task,
-            status: newStatus,
-            isCompleted: newStatus === "done" ? true : false,
-          };
-        }
-        return task;
-      })
-    );
-  }, []);
+    dispatch({
+      type: "MOVE_TASK",
+      payload: {
+        id: taskId,
+        status: newStatus
+      }
+    });
+  }, [dispatch]);
 
   return (
     <>

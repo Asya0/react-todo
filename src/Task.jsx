@@ -1,4 +1,4 @@
-import  React, {useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CiTrash, CiEdit, CiCircleCheck } from "react-icons/ci";
 import { IoIosMove, IoMdCheckmark } from "react-icons/io";
@@ -17,7 +17,6 @@ const TaskComponent = ({ id, title, onRemove, onCheck, onEdit, task, isCompleted
     transform: transform
       ? `translate(${transform.x}px, ${transform.y}px)`
       : undefined,
-    // cursor: "grab",
   };
   useEffect(() => {
     console.log("render task", title, id);
@@ -32,15 +31,14 @@ const TaskComponent = ({ id, title, onRemove, onCheck, onEdit, task, isCompleted
   return (
     <>
       <div
-        className="task"
+        className="task mr-5 glass-effect rounded-xl w-full pt-2 pr-3 pb-2 pl-3"
         ref={setNodeRef}
         style={style}
-      // style={{ display: "flex", alignItems: "center" }}
       >
         <label className="mr-2 flex items-center cursor-pointer relative">
           <input
             type="checkbox"
-            checked={isCompleted}
+            checked={task.isCompleted}
             onChange={() => onCheck(id)}
             className="peer sr-only"
           />
@@ -52,7 +50,7 @@ const TaskComponent = ({ id, title, onRemove, onCheck, onEdit, task, isCompleted
           peer-checked:border-slate-500
         "
           >
-            {isCompleted && (
+            {task.isCompleted && (
               <IoMdCheckmark size="22" className="text-slate-300 text-lg m-0" />
             )}
           </div>
@@ -85,9 +83,9 @@ const TaskComponent = ({ id, title, onRemove, onCheck, onEdit, task, isCompleted
         ) : (
           <span
             style={{
-              textDecoration: isCompleted ? "line-through " : "",
-              textDecorationColor: isCompleted ? "#a3a3a3 " : "",
-              color: isCompleted ? "#a3a3a3" : "",
+              textDecoration: task.isCompleted ? "line-through " : "",
+              textDecorationColor: task.isCompleted ? "#a3a3a3 " : "",
+              color: task.isCompleted ? "#a3a3a3" : "",
             }}
             className={`flex-grow max-w-[220px] w-[220px] ${isCompleted ? "text-green-600" : ""}`}
             onDoubleClick={() => {
@@ -95,7 +93,7 @@ const TaskComponent = ({ id, title, onRemove, onCheck, onEdit, task, isCompleted
               setIsEditing(true);
             }}
           >
-            {title}
+            {task.title}
           </span>
         )}
 

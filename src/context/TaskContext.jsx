@@ -1,25 +1,19 @@
-import { createContext, useReducer, useContext, useEffect } from "react";
+import { createContext, useReducer, useContext, useEffect, useCallback  } from "react";
+import { taskService } from "../services/taskService";
 
 const TaskStateContext = createContext(null);
 const TaskDispatchContext = createContext(null);
 
 // Функция для инициализации состояния из localStorage
-const initializer = () => {
-  try {
-    const savedTasks = localStorage.getItem("tasks");
-    if (savedTasks) {
-      const parsedTasks = JSON.parse(savedTasks);
-      console.log("Tasks loaded from localStorage:", parsedTasks);
-      return parsedTasks;
-    }
-  } catch (error) {
-    console.error("Error loading tasks from localStorage:", error);
-  }
-  return [];
-};
 
 function taskReducer(state, action) {
   switch(action.type) {
+    // case "SET_TASKS": {
+    //   return action.payload;
+    // }
+    case "SET_TASKS": {
+      return action.payload || [];
+    }
     case "ADD_TASK": {
       const {title, priority} = action.payload;
 
@@ -68,29 +62,57 @@ function taskReducer(state, action) {
         : t
       );
     }
-    case "SET_TASKS": {
-      return action.payload || [];
-    }
     default: 
       return state;
   }
 }
 
 export function TaskProvider({children}) {
-    const [state, dispatch] = useReducer(taskReducer, [], initializer);
+    const [state, dispatch] = useReducer(taskReducer, []);
 
-    // Автоматическое сохранение в localStorage при изменении state
-    useEffect(() => {
+  useEffect(() => {
+    const loadTasks = async () => {
       try {
-        localStorage.setItem("tasks", JSON.stringify(state));
-      } catch (error) {
-        console.error("Error saving tasks to localStorage:", error);
+        const tasks = await taskService.getAll();
+        console.log(tasks, "задачи из апишки")
+
+        const formattedTasks = tasks.map(task => ({
+          id: task.id,
+          title: task.title,
+          isCompleted: task.completed,
+          status: task.completed ? "done" : "not_started",
+          priority: "medium",
+          createdAt: new Date().getTime(),
+        }));
+        dispatch({type: "SET_TASKS", payload: formattedTasks })
       }
-    }, [state]);
+      catch (error) {
+        console.log("Error to load tasks", error)
+      }
+    }
+    loadTasks();
+  }, []) 
+  
+  const apiDispatch = useCallback(async (action) => {
+    try{
+      switch(action.type) {
+        case "ADD_TASK":
+          const newTask = await taskService.create(action.payload)
+          dispatch({type: "ADD_TASK", payload: newTask})
+          break;
+
+          //case "EDIT_TASK:..."
+          default: dispatch(action);
+      }
+    }
+    catch(error) {
+      console.log(`Failed to ${action.type}:`, error)
+    }
+  })
 
     return(
         <TaskStateContext.Provider value={state}>
-            <TaskDispatchContext.Provider value={dispatch}>
+            <TaskDispatchContext.Provider value={apiDispatch}>
                 {children}
             </TaskDispatchContext.Provider>
         </TaskStateContext.Provider>

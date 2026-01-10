@@ -37,4 +37,22 @@ export const taskService = {
         }
 
     },
+
+    async updateTask(taskData) {
+        try {
+           const response = await fetch(`${API_URL}/${taskData.id}`, {
+                method: "PATCH",
+                body: JSON.stringify({
+                    title: taskData.title,
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) throw new Error("Ошибка изменения задачи")
+            const updatedTask = await response.json();
+            return updatedTask;
+
+        } catch (error) {console.log(error, "Ошибка при попытке редактирования задачи")}
+    },
 }

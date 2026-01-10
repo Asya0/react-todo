@@ -102,8 +102,8 @@ export function TaskProvider({ children }) {
           const newTask = await taskService.createTask(action.payload);
           console.log(newTask, "новая задача");
           const formattedTask = {
-            id: apiTask.id, // или свой уникальный ID
-            title: apiTask.title,
+            id: newTask.id, // или свой уникальный ID
+            title: newTask.title,
             isCompleted: false, // новая задача всегда не выполнена
             status: "not_started",
             priority: action.payload.priority || "medium", // берем из action.payload
@@ -112,7 +112,21 @@ export function TaskProvider({ children }) {
           dispatch({ type: "ADD_TASK", payload: formattedTask })
           break;
 
-        //case "EDIT_TASK:..."
+
+        case "EDIT_TASK":
+          console.log("EDIT_TASK - что пришло:", action.payload);
+          console.log("ID задачи:", action.payload.id);
+          console.log("Новый title:", action.payload.title);
+          const updateTask = await taskService.updateTask(action.payload);
+          const formatTask = {
+            id: updateTask.id,
+            title: updateTask.title,
+          };
+          dispatch({ type: "EDIT_TASK", payload: updateTask })
+          break;
+
+
+        //case "DELETE_TASK:..."
         default: dispatch(action);
       }
     }

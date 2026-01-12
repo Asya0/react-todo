@@ -1,14 +1,6 @@
 {
   "tasks": [
     {
-      "id": "1",
-      "title": "Проснуться",
-      "isCompleted": true,
-      "status": "done",
-      "priority": "high",
-      "createdAt": 1767976354
-    },
-    {
       "id": "2",
       "title": "Прочитать книгу Чистый код",
       "isCompleted": false,
@@ -30,13 +22,6 @@
       "isCompleted": false,
       "status": "not_started",
       "createdAt": 1768064303570
-    },
-    {
-      "title": "ПРОВЕРКА",
-      "isCompleted": false,
-      "status": "not_started",
-      "priority": "low",
-      "id": "7b82"
     }
   ]
 }

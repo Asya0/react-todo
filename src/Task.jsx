@@ -5,7 +5,16 @@ import { IoIosMove, IoMdCheckmark } from "react-icons/io";
 
 import "./Components/Task.css";
 
-const TaskComponent = ({ id, title, onRemove, onCheck, onEdit, task, isCompleted }) => {
+// const TaskComponent = ({ id, title, onRemove, onCheck, onEdit, task, isCompleted }) => {
+
+
+  const TaskComponent = (props) => {
+  console.log("TaskComponent все пропсы:", props);
+  console.log("id из пропсов:", props.id);
+  console.log("id из task:", props.task?.id);
+  
+  const { id, title, onRemove, onCheck, onEdit, task, isCompleted } = props;
+  
 
   // const Task = React.memo() => { // почему-то при React.memo undefined
   // const { id, title, isCompleted, } = task;
@@ -20,13 +29,17 @@ const TaskComponent = ({ id, title, onRemove, onCheck, onEdit, task, isCompleted
   };
   useEffect(() => {
     console.log("render task", title, id);
-  }, []);
+  }, [id]);
 
   const saveEdit = () => {
     console.log("сохранение редактирования задачи");
     onEdit(id, editedTitle);
     setIsEditing(false);
   };
+
+   if (!id || !title) {
+    return null; 
+  }
 
   return (
     <>
@@ -113,7 +126,7 @@ const TaskComponent = ({ id, title, onRemove, onCheck, onEdit, task, isCompleted
             className="cursor-pointer"
             size={20}
             onClick={() => {
-              console.log("CLICKED");
+              console.log("CLICKED", id);
               onRemove(id);
               console.log("delete task");
             }}

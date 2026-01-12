@@ -22,7 +22,6 @@ export const taskService = {
                     status: newTaskData.status || "not_started",
                     priority: newTaskData.priority || "low",
                     createdAt: Date.now(),
-
                 }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -40,10 +39,12 @@ export const taskService = {
 
     async updateTask(taskData) {
         try {
-           const response = await fetch(`${API_URL}/${taskData.id}`, {
+            const response = await fetch(`${API_URL}/${taskData.id}`, {
                 method: "PATCH",
                 body: JSON.stringify({
                     title: taskData.title,
+                    status: taskData.status,
+                    isCompleted: taskData.isCompleted,
                 }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -53,6 +54,22 @@ export const taskService = {
             const updatedTask = await response.json();
             return updatedTask;
 
-        } catch (error) {console.log(error, "Ошибка при попытке редактирования задачи")}
+        } catch (error) { console.log(error, "Ошибка при попытке редактирования задачи") }
     },
+
+    async deleteTask(taskData) {
+        try {
+            const response = await fetch(`${API_URL}/${taskData.id}`, {
+                method: "DELETE",
+                // body: JSON.stringify({
+                //     id: taskData.id,
+                // }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) throw new Error("Ошибка при удалении задачи")
+                return await response.json();
+        } catch (error) { console.log(error, "Ошибка при попытке удаления задачи") }
+    }
 }

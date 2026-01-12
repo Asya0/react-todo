@@ -9,6 +9,7 @@ const Column = ({ title, tasks, onCheck, onRemove, onEdit, status }) => {
   });
 
   const filteredTasks = tasks.filter((t) => t.status === status)
+  // const filteredTasks = tasks.filter((t) => t.id)
 
   return (
     <div
@@ -26,6 +27,7 @@ const Column = ({ title, tasks, onCheck, onRemove, onEdit, status }) => {
             key={task.id}
             id={task.id}
             task={task}
+            // title={task.title}
             onCheck={onCheck}
             onRemove={onRemove}
             onEdit={onEdit}

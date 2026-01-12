@@ -18,17 +18,17 @@ function taskReducer(state, action) {
       const { title, priority } = action.payload;
 
       const newTask = {
-        id: crypto.randomUUID(),
+        // id: id,
         title,
         isCompleted: false,
-        // status: "not_started",
-        // priority,
-        // createdAt: Date.now(),
+        status: "not_started",
+        priority,
+        createdAt: Date.now(),
       };
       return [newTask, ...state];
     }
     case "EDIT_TASK": {
-      const { id, title } = action.payload;
+      const { id, title, status, isCompleted } = action.payload;
 
       return state.map(t => t.id === id
         ? { ...t, title }
@@ -98,6 +98,7 @@ export function TaskProvider({ children }) {
   const apiDispatch = useCallback(async (action) => {
     try {
       switch (action.type) {
+        // при создании задачи обновлять список задач
         case "ADD_TASK":
           const newTask = await taskService.createTask(action.payload);
           console.log(newTask, "новая задача");
@@ -109,6 +110,7 @@ export function TaskProvider({ children }) {
             priority: action.payload.priority || "medium", // берем из action.payload
             createdAt: Date.now()
           };
+          console.log(formattedTask, "formattedTask")
           dispatch({ type: "ADD_TASK", payload: formattedTask })
           break;
 
@@ -121,12 +123,24 @@ export function TaskProvider({ children }) {
           const formatTask = {
             id: updateTask.id,
             title: updateTask.title,
+            status: updateTask.status,
+            isCompleted: updateTask.isCompleted,
           };
           dispatch({ type: "EDIT_TASK", payload: updateTask })
           break;
 
 
-        //case "DELETE_TASK:..."
+        case "DELETE_TASK":
+          console.log("action.payload при удалении:", action.payload);
+          console.log("action.payload.id:", action.payload?.id);
+          const deleteTask = await taskService.deleteTask(action.payload);
+          console.log(deleteTask, "что возвращает deleteTask")
+          const formattedTaskDelete = {
+            id: deleteTask.id,
+          }
+          dispatch({ type: "DELETE_TASK", payload: formattedTaskDelete })
+          break;
+
         default: dispatch(action);
       }
     }

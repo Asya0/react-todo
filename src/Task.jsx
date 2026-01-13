@@ -5,16 +5,13 @@ import { IoIosMove, IoMdCheckmark } from "react-icons/io";
 
 import "./Components/Task.css";
 
-// const TaskComponent = ({ id, title, onRemove, onCheck, onEdit, task, isCompleted }) => {
-
-
-  const TaskComponent = (props) => {
+const TaskComponent = (props) => {
   console.log("TaskComponent все пропсы:", props);
   console.log("id из пропсов:", props.id);
   console.log("id из task:", props.task?.id);
-  
-  const { id, title, onRemove, onCheck, onEdit, task, isCompleted } = props;
-  
+
+  const { id, onRemove, onCheck, onEdit, task, isCompleted } = props;
+
 
   // const Task = React.memo() => { // почему-то при React.memo undefined
   // const { id, title, isCompleted, } = task;
@@ -28,7 +25,7 @@ import "./Components/Task.css";
       : undefined,
   };
   useEffect(() => {
-    console.log("render task", title, id);
+    console.log("render task", task.title, id);
   }, [id]);
 
   const saveEdit = () => {
@@ -37,8 +34,8 @@ import "./Components/Task.css";
     setIsEditing(false);
   };
 
-   if (!id || !title) {
-    return null; 
+  if (!task || !task.id || !task.title) {
+    return null;
   }
 
   return (
@@ -102,7 +99,7 @@ import "./Components/Task.css";
             }}
             className={`flex-grow max-w-[220px] w-[220px] ${isCompleted ? "text-green-600" : ""}`}
             onDoubleClick={() => {
-              setEditedTitle(title);
+              setEditedTitle(task.title);
               setIsEditing(true);
             }}
           >
@@ -119,7 +116,7 @@ import "./Components/Task.css";
         <div className="task-tools">
           <CiEdit
             size={20}
-            onClick={() => onEdit(id, prompt("Редактировать задачу", title))}
+            onClick={() => onEdit(id, prompt("Редактировать задачу", task.title))}
           />
 
           <CiTrash

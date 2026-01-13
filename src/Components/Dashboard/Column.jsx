@@ -9,7 +9,16 @@ const Column = ({ title, tasks, onCheck, onRemove, onEdit, status }) => {
   });
 
   const filteredTasks = tasks.filter((t) => t.status === status)
-  // const filteredTasks = tasks.filter((t) => t.id)
+
+
+  if (!tasks || tasks.length === 0) {
+    return (
+      <div ref={setNodeRef} className="...">
+        <h3 className="text-2xl mb-5">{title}</h3>
+        <p className="text-gray-500 text-center py-4">Загрузка...</p>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -24,10 +33,9 @@ const Column = ({ title, tasks, onCheck, onRemove, onEdit, status }) => {
       {filteredTasks.length > 0 ? (
         filteredTasks.map((task) => (
           <Task
-            key={task.id}
+            key={`${task.id}-${task.title}`}
             id={task.id}
             task={task}
-            // title={task.title}
             onCheck={onCheck}
             onRemove={onRemove}
             onEdit={onEdit}
@@ -36,8 +44,8 @@ const Column = ({ title, tasks, onCheck, onRemove, onEdit, status }) => {
       ) : (
         <p className="text-gray-500 text-center py-4">Задач нет</p>
       )}
-      
+
     </div>
   )
 }
-  export default Column;
+export default Column;

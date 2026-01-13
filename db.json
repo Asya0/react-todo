@@ -19,8 +19,9 @@
     {
       "id": "53a0",
       "title": "Практика react js",
-      "isCompleted": false,
-      "status": "not_started",
+      "isCompleted": true,
+      "status": "done",
+      "priority": "low",
       "createdAt": 1768064303570
     }
   ]

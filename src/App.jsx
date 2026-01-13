@@ -6,7 +6,7 @@ import { DndContext } from "@dnd-kit/core";
 //компоненты
 import AddTask from "./Components/AddTask";
 import Columns from "./Components/Dashboard/Columns";
-import {useTasks, useTasksDispatch} from "./context/TaskContext";
+import { useTasks, useTasksDispatch } from "./context/TaskContext";
 
 //стили
 import "./App.css";
@@ -15,8 +15,8 @@ import "./index.css";
 const App = () => {
   const [isValue, setIsValue] = useState("");
   const [isPriority, setIsPriority] = useState("low");
-  
-  const taskList = useTasks();
+
+  const { tasks: taskList, isLoading } = useTasks();
   const dispatch = useTasksDispatch();
 
   const addTask = useCallback((title, priority) => {
@@ -24,13 +24,13 @@ const App = () => {
       alert("Введите название задачи");
       return;
     }
-    
-    dispatch({ 
-      type: "ADD_TASK", 
-      payload: { 
-        title: title.trim(), 
-        priority: priority || isPriority 
-      } 
+
+    dispatch({
+      type: "ADD_TASK",
+      payload: {
+        title: title.trim(),
+        priority: priority || isPriority
+      }
     });
     setIsValue("");
   }, [dispatch, isPriority]);
@@ -40,9 +40,9 @@ const App = () => {
       alert("Введите название задачи");
       return;
     }
-    dispatch({ 
-      type: "EDIT_TASK", 
-      payload: { id, title: newTitle.trim() } 
+    dispatch({
+      type: "EDIT_TASK",
+      payload: { id, title: newTitle.trim() }
     });
   }, [dispatch]);
 
@@ -54,9 +54,9 @@ const App = () => {
   }, [dispatch]);
 
   const deleteTask = useCallback((id) => {
-    dispatch({ 
-      type: "DELETE_TASK", 
-      payload: { id } 
+    dispatch({
+      type: "DELETE_TASK",
+      payload: { id }
     });
   }, [dispatch]);
 
@@ -75,6 +75,11 @@ const App = () => {
       }
     });
   }, [dispatch]);
+
+  if (isLoading) {
+    return <div>Загрузка задач...</div>;
+  }
+
 
   return (
     <>

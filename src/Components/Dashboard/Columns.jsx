@@ -5,6 +5,8 @@ import { React } from "react";
 import Column from "./Column";
 //стили
 const Columns = ({ tasks, onEdit, onCheck, onRemove, isPriority }) => {
+
+  
   return (
     <div className="flex gap-3 justify-center m-auto w-full">
       <Column

@@ -1,4 +1,4 @@
-import { createContext, useReducer, useContext, useEffect, useCallback } from "react";
+import { createContext, useReducer, useContext, useEffect, useCallback, useState } from "react";
 import { taskService } from "../services/taskService";
 
 const TaskStateContext = createContext(null);
@@ -8,9 +8,6 @@ const TaskDispatchContext = createContext(null);
 
 function taskReducer(state, action) {
   switch (action.type) {
-    // case "SET_TASKS": {
-    //   return action.payload;
-    // }
     case "SET_TASKS": {
       return action.payload || [];
     }
@@ -31,7 +28,7 @@ function taskReducer(state, action) {
       const { id, title, status, isCompleted } = action.payload;
 
       return state.map(t => t.id === id
-        ? { ...t, title }
+        ? { ...t, title, status, isCompleted }
         : t);
     }
     case "DELETE_TASK": {
@@ -69,19 +66,21 @@ function taskReducer(state, action) {
 
 export function TaskProvider({ children }) {
   const [state, dispatch] = useReducer(taskReducer, []);
+  const [isLoading, setIsLoading] = useState(true);
 
   const formatTaskFromApi = (apiTask) => ({
     id: apiTask.id,
     title: apiTask.title,
-    isCompleted: apiTask.completed,
-    status: apiTask.completed ? "done" : "not_started",
-    priority: "medium", // пока хардкод
-    createdAt: new Date().getTime(),
+    isCompleted: apiTask.completed || apiTask.isCompleted || false,
+    status: apiTask.status || (apiTask.completed ? "done" : "not_started"),
+    priority: apiTask.priority,
+    createdAt:  apiTask.createdAt || new Date().getTime(),
   });
 
   useEffect(() => {
     const loadTasks = async () => {
       try {
+        setIsLoading(true);
         const tasks = await taskService.getAll();
         console.log(tasks, "задачи из апишки")
 
@@ -90,10 +89,17 @@ export function TaskProvider({ children }) {
       }
       catch (error) {
         console.log("Error to load tasks", error)
+      } finally {
+        setIsLoading(false); 
       }
     }
     loadTasks();
   }, [])
+
+  const value = {
+    tasks: state,
+    isLoading
+  }
 
   const apiDispatch = useCallback(async (action) => {
     try {
@@ -124,6 +130,7 @@ export function TaskProvider({ children }) {
             id: updateTask.id,
             title: updateTask.title,
             status: updateTask.status,
+            priority: updateTask.priority,
             isCompleted: updateTask.isCompleted,
           };
           dispatch({ type: "EDIT_TASK", payload: updateTask })
@@ -150,7 +157,7 @@ export function TaskProvider({ children }) {
   }, [])
 
   return (
-    <TaskStateContext.Provider value={state}>
+    <TaskStateContext.Provider value={value}>
       <TaskDispatchContext.Provider value={apiDispatch}>
         {children}
       </TaskDispatchContext.Provider>
@@ -163,7 +170,7 @@ export function useTasks() {
   if (context === undefined) {
     throw new Error("useTasks must be used within a TaskProvider");
   }
-  return context || [];
+  return context;
 }
 
 export function useTasksDispatch() {

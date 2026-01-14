@@ -1,5 +1,5 @@
-import { createContext, useReducer, useContext, useEffect, useCallback, useState } from "react";
-import { taskService } from "../services/taskService";
+import { createContext, useReducer, useContext, useEffect, useCallback, useState } from 'react';
+import { taskService } from '../services/taskService';
 
 const TaskStateContext = createContext(null);
 const TaskDispatchContext = createContext(null);
@@ -8,55 +8,55 @@ const TaskDispatchContext = createContext(null);
 
 function taskReducer(state, action) {
   switch (action.type) {
-    case "SET_TASKS": {
+    case 'SET_TASKS': {
       return action.payload || [];
     }
-    case "ADD_TASK": {
-      const { title, priority } = action.payload;
+    case 'ADD_TASK': {
+      const { id, title, priority } = action.payload;
 
       const newTask = {
-        // id: id,
+        id,
         title,
         isCompleted: false,
-        status: "not_started",
+        status: 'not_started',
         priority,
         createdAt: Date.now(),
       };
       return [newTask, ...state];
     }
-    case "EDIT_TASK": {
+    case 'EDIT_TASK': {
       const { id, title, status, isCompleted } = action.payload;
 
-      return state.map(t => t.id === id
-        ? { ...t, title, status, isCompleted }
-        : t);
+      return state.map((t) => (t.id === id ? { ...t, title, status, isCompleted } : t));
     }
-    case "DELETE_TASK": {
+    case 'DELETE_TASK': {
       const { id } = action.payload;
-      return state.filter(t => t.id !== id);
+      return state.filter((t) => t.id !== id);
     }
-    case "CHECK_TASK": {
+    case 'CHECK_TASK': {
       const { id } = action.payload;
 
-      return state.map(t => t.id === id
-        ? {
-          ...t,
-          isCompleted: !t.isCompleted,
-          status: !t.isCompleted ? "done" : "not_started"
-        }
-        : t
+      return state.map((t) =>
+        t.id === id
+          ? {
+              ...t,
+              isCompleted: !t.isCompleted,
+              status: !t.isCompleted ? 'done' : 'not_started',
+            }
+          : t,
       );
     }
-    case "MOVE_TASK": {
+    case 'MOVE_TASK': {
       const { id, status } = action.payload;
 
-      return state.map(t => t.id === id
-        ? {
-          ...t,
-          status: status,
-          isCompleted: status === "done"
-        }
-        : t
+      return state.map((t) =>
+        t.id === id
+          ? {
+              ...t,
+              status: status,
+              isCompleted: status === 'done',
+            }
+          : t,
       );
     }
     default:
@@ -72,9 +72,9 @@ export function TaskProvider({ children }) {
     id: apiTask.id,
     title: apiTask.title,
     isCompleted: apiTask.completed || apiTask.isCompleted || false,
-    status: apiTask.status || (apiTask.completed ? "done" : "not_started"),
+    status: apiTask.status || (apiTask.completed ? 'done' : 'not_started'),
     priority: apiTask.priority,
-    createdAt:  apiTask.createdAt || new Date().getTime(),
+    createdAt: apiTask.createdAt || new Date().getTime(),
   });
 
   useEffect(() => {
@@ -82,49 +82,47 @@ export function TaskProvider({ children }) {
       try {
         setIsLoading(true);
         const tasks = await taskService.getAll();
-        console.log(tasks, "задачи из апишки")
+        console.log(tasks, 'задачи из апишки');
 
         const formattedTasks = tasks.map(formatTaskFromApi);
-        dispatch({ type: "SET_TASKS", payload: formattedTasks })
-      }
-      catch (error) {
-        console.log("Error to load tasks", error)
+        dispatch({ type: 'SET_TASKS', payload: formattedTasks });
+      } catch (error) {
+        console.log('Error to load tasks', error);
       } finally {
-        setIsLoading(false); 
+        setIsLoading(false);
       }
-    }
+    };
     loadTasks();
-  }, [])
+  }, []);
 
   const value = {
     tasks: state,
-    isLoading
-  }
+    isLoading,
+  };
 
   const apiDispatch = useCallback(async (action) => {
     try {
       switch (action.type) {
         // при создании задачи обновлять список задач
-        case "ADD_TASK":
+        case 'ADD_TASK':
           const newTask = await taskService.createTask(action.payload);
-          console.log(newTask, "новая задача");
+          console.log(newTask, 'новая задача');
           const formattedTask = {
             id: newTask.id, // или свой уникальный ID
             title: newTask.title,
             isCompleted: false, // новая задача всегда не выполнена
-            status: "not_started",
-            priority: action.payload.priority || "medium", // берем из action.payload
-            createdAt: Date.now()
+            status: 'not_started',
+            priority: action.payload.priority || 'medium', // берем из action.payload
+            createdAt: Date.now(),
           };
-          console.log(formattedTask, "formattedTask")
-          dispatch({ type: "ADD_TASK", payload: formattedTask })
+          console.log(formattedTask, 'formattedTask');
+          dispatch({ type: 'ADD_TASK', payload: formattedTask });
           break;
 
-
-        case "EDIT_TASK":
-          console.log("EDIT_TASK - что пришло:", action.payload);
-          console.log("ID задачи:", action.payload.id);
-          console.log("Новый title:", action.payload.title);
+        case 'EDIT_TASK':
+          console.log('EDIT_TASK - что пришло:', action.payload);
+          console.log('ID задачи:', action.payload.id);
+          console.log('Новый title:', action.payload.title);
           const updateTask = await taskService.updateTask(action.payload);
           const formatTask = {
             id: updateTask.id,
@@ -133,42 +131,39 @@ export function TaskProvider({ children }) {
             priority: updateTask.priority,
             isCompleted: updateTask.isCompleted,
           };
-          dispatch({ type: "EDIT_TASK", payload: updateTask })
+          dispatch({ type: 'EDIT_TASK', payload: updateTask });
           break;
 
-
-        case "DELETE_TASK":
-          console.log("action.payload при удалении:", action.payload);
-          console.log("action.payload.id:", action.payload?.id);
+        case 'DELETE_TASK':
+          console.log('action.payload при удалении:', action.payload);
+          console.log('action.payload.id:', action.payload?.id);
           const deleteTask = await taskService.deleteTask(action.payload);
-          console.log(deleteTask, "что возвращает deleteTask")
+          console.log(deleteTask, 'что возвращает deleteTask');
           const formattedTaskDelete = {
             id: deleteTask.id,
-          }
-          dispatch({ type: "DELETE_TASK", payload: formattedTaskDelete })
+          };
+          dispatch({ type: 'DELETE_TASK', payload: formattedTaskDelete });
           break;
 
-        default: dispatch(action);
+        default:
+          dispatch(action);
       }
+    } catch (error) {
+      console.log(`Failed to ${action.type}:`, error);
     }
-    catch (error) {
-      console.log(`Failed to ${action.type}:`, error)
-    }
-  }, [])
+  }, []);
 
   return (
     <TaskStateContext.Provider value={value}>
-      <TaskDispatchContext.Provider value={apiDispatch}>
-        {children}
-      </TaskDispatchContext.Provider>
+      <TaskDispatchContext.Provider value={apiDispatch}>{children}</TaskDispatchContext.Provider>
     </TaskStateContext.Provider>
-  )
+  );
 }
 
 export function useTasks() {
   const context = useContext(TaskStateContext);
   if (context === undefined) {
-    throw new Error("useTasks must be used within a TaskProvider");
+    throw new Error('useTasks must be used within a TaskProvider');
   }
   return context;
 }
@@ -176,9 +171,7 @@ export function useTasks() {
 export function useTasksDispatch() {
   const context = useContext(TaskDispatchContext);
   if (context === undefined) {
-    throw new Error("useTasksDispatch must be used within a TaskProvider");
+    throw new Error('useTasksDispatch must be used within a TaskProvider');
   }
   return context;
 }
-
-

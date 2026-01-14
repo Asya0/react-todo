@@ -47,14 +47,14 @@ function taskReducer(state, action) {
       );
     }
     case 'MOVE_TASK': {
-      const { id, status } = action.payload;
+      const { id, status, isCompleted } = action.payload;
 
       return state.map((t) =>
         t.id === id
           ? {
               ...t,
               status: status,
-              isCompleted: status === 'done',
+              isCompleted: status === 'done' ? true : false,
             }
           : t,
       );
@@ -145,6 +145,13 @@ export function TaskProvider({ children }) {
           dispatch({ type: 'DELETE_TASK', payload: formattedTaskDelete });
           break;
 
+        case 'MOVE_TASK':
+          const moveTask = await taskService.moveTask(action.payload);
+
+          console.log(moveTask, 'что лежит в moveTask');
+
+          dispatch({ type: 'ADD_TASK', payload: moveTask });
+          break;
         default:
           dispatch(action);
       }
